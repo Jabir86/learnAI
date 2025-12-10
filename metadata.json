@@ -1,0 +1,135 @@
+[
+  {
+    "title": "Principle of Oxy-acetylene welding",
+    "path": " Principle of Oxy-acetylene welding",
+    "subtopic": "context",
+    "text": "Oxy-acetylene welding (also called gas welding or OAW) is a fusion welding process that uses a flame from burning acetylene (C\u2082H\u2082) with oxygen (O\u2082) to melt base metal edges. The torch mixes the gases and the flame temperature (neutral flame) reaches 3200\u20133300 \u00b0C, high enough to melt mild steel locally.",
+    "id": "C_00001"
+  },
+  {
+    "title": "Equipment & consumables",
+    "path": " Equipment & consumables",
+    "subtopic": "context",
+    "text": "",
+    "id": "C_00002"
+  },
+  {
+    "title": "Cylinders",
+    "path": " Equipment & consumables >  Cylinders",
+    "subtopic": "context",
+    "text": "Oxygen (high pressure steel cylinder), Acetylene (dissolved in acetone inside cylinder). Store upright, chained, valve covers on when not in use.",
+    "id": "C_00003"
+  },
+  {
+    "title": "Regulators",
+    "path": " Equipment & consumables >  Regulators",
+    "subtopic": "context",
+    "text": "Two pressure regulators (one per cylinder) with gauges: cylinder pressure & working (delivery) pressure.",
+    "id": "C_00004"
+  },
+  {
+    "title": "Hoses",
+    "path": " Equipment & consumables >  Hoses",
+    "subtopic": "context",
+    "text": "Oxygen = green (or black/green), Acetylene = red. Use flashback arrestors and check valves.",
+    "id": "C_00005"
+  },
+  {
+    "title": "Torch (handle & mixing tip)",
+    "path": " Equipment & consumables >  Torch (handle & mixing tip)",
+    "subtopic": "context",
+    "text": "Handles with valves for oxygen/acetylene; detachable tips/nozzles sized by material thickness.",
+    "id": "C_00006"
+  },
+  {
+    "title": "Tips/nozzles",
+    "path": " Equipment & consumables >  Tips/nozzles",
+    "subtopic": "context",
+    "text": "Tip numbers/sizes chosen by plate thickness and welding current (heat input). Smaller tips for thin metals, larger for thicker.",
+    "id": "C_00007"
+  },
+  {
+    "title": "Accessories",
+    "path": " Equipment & consumables >  Accessories",
+    "subtopic": "context",
+    "text": "Spark lighter, wire brush, chipping hammer, clamps, backing bars, fireproof blankets.",
+    "id": "C_00008"
+  },
+  {
+    "title": "Make Mould Pattern",
+    "path": " Make Mould Pattern",
+    "subtopic": "context",
+    "text": "",
+    "id": "C_00009"
+  },
+  {
+    "title": "Pattern",
+    "path": " Make Mould Pattern >  Pattern",
+    "subtopic": "context",
+    "text": "A pattern is a replica or model of the object to be cast. It is slightly larger than the final component due to allowances. The pattern is used to create a cavity in the mould.",
+    "id": "C_00010"
+  },
+  {
+    "title": "Classifications of Patterns",
+    "path": " Make Mould Pattern >  Classifications of Patterns",
+    "subtopic": "context",
+    "text": "Classified based on their construction, use, and application in moulding. Single Piece Pattern (Solid Pattern) Split Pattern (Two-Piece Pattern) Match Plate Pattern Loose Piece Pattern Sweep Pattern Skeleton Pattern Gated Pattern Segmental Pattern",
+    "id": "C_00011"
+  },
+  {
+    "title": "Mould",
+    "path": " Mould",
+    "subtopic": "context",
+    "text": "A mould is a cavity formed by packing moulding sand around the pattern. After removing the pattern, the cavity is filled with molten metal to produce the casting.",
+    "id": "C_00012"
+  },
+  {
+    "title": "Sand moulding making procedure",
+    "path": " Mould >  Sand moulding making procedure",
+    "subtopic": "context",
+    "text": "The drag half of the pattern is placed on the mould board. A parting material (lycopodium talc) is dusted over the pattern and the moulding board\nto the removal of the pattern from the mould. The drag is filled with moulding sand and its is packed and rammed around the pattern. After the ramming, the excess sand is scrapped off with a straight bar called a\n\u201cStrike Rod\u201d. Vent holes are pierced in the sand with \"Vent Wires\" for the gases to escape through. The drag box mould is turned over 180\u00b0. The cope half of the pattern is properly positioned over the drag half of the pattern with the help of dowel pins and dowel holes. The cope flask is mounted onto the drag flask and the two halves are properly aligned\nwith the help of alignment pins. The sprue pin and riser pin are placed in the position. The operation of filling, ramming and venting of the cope proceed in the same manner\nas in the drag. A pouring basin is cut adjacent to the sprue and then the sprue and riser pins are withdrawn. The cope is carefully lifted off the temporarily separated from the drag and placed on one side. Split pattern from the drag and cope is lifted out. The gate and runner are cut in the drag  and cope, connecting the mould cavity and the\nsprue opening. The mould is now assembled, the cope being carefully placed over the drag so that\nthe locating pins fit into the holes. The mould is now ready for pouring.",
+    "id": "C_00013"
+  },
+  {
+    "title": "Advantages of Moulding",
+    "path": " Mould >  Advantages of Moulding",
+    "subtopic": "context",
+    "text": "Sand moulding can produce complex shapes that machining cannot achieve. It is suitable for casting very small to very large components. Sand is cheap, easily available, and reusable, making the process economical. Both ferrous and non-ferrous metals can be cast. Design changes are easy by modifying the pattern or mould. Patterns and moulding boxes are cheaper compared to permanent mould dies.",
+    "id": "C_00014"
+  },
+  {
+    "title": "Disadvantages of Moulding (Shortened)",
+    "path": " Mould >  Disadvantages of Moulding (Shortened)",
+    "subtopic": "context",
+    "text": "Sand moulds give rough surfaces, so machining is often needed. Shrinkage and mould deformation can cause errors in size. The process is slow due to mould preparation, pouring, cooling, and shakeout. Skilled workers are needed for pattern making, moulding, and finishing. Thin parts may not fill properly as the metal solidifies too quickly. Extra work is needed to remove sand, runners, risers, and finish the casting.",
+    "id": "C_00015"
+  },
+  {
+    "title": "Working Principle",
+    "path": " Working Principle",
+    "subtopic": "context",
+    "text": "Milling machine is a machine tool that form a work piece as it is fed against a rotating multi point cutting tool called milling cutter. The cutter rotates at a high speed and as it is provided with many cutting edges, it removes the metal at a very fast rate. The milling machine can also hold one or more number of cutters at a time.",
+    "id": "C_00016"
+  },
+  {
+    "title": "Step milling using side and face cutter",
+    "path": " Step milling using side and face cutter",
+    "subtopic": "context",
+    "text": "Step milling is a machining operation in which one or more steps (vertical drops in surface height) are produced on a workpiece. A Side and Face Cutter is commonly used for this operation because it can cut both on its periphery and its side, allowing accurate machining of vertical and horizontal surfaces in one pass.",
+    "id": "C_00017"
+  },
+  {
+    "title": "Making \u2018V\u2019 Block",
+    "path": " Making \u2018V\u2019 Block",
+    "subtopic": "context",
+    "text": "A V-block is a precision holding device used to support cylindrical workpieces during marking, inspection, drilling, or machining. It has a 90\u00b0 V-groove accurately machined on the top to hold round components firmly.",
+    "id": "C_00018"
+  },
+  {
+    "title": "Straddle milling",
+    "path": " Straddle milling",
+    "subtopic": "context",
+    "text": "Straddle milling is an operation in which a pair of side milling cutters are used for machining two parallel vertical surfaces of a workpiece simultaneously. The distance between the cutter is adjusted by the spacers. This process is used to mill square and hexagonal surfaces.",
+    "id": "C_00019"
+  }
+]

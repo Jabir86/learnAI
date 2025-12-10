@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chatbot Analytics</title>
+
+        <!-- Tailwind CDN-->
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <!-- Chart.js-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Dashboard JS-->
+        <script defer src="dashboard.js"></script>
+       
+        <!-- <style>
+            body { 
+                font-family: Arial;
+                padding: 30px;
+            }
+            .chart-container {
+                width: 700px;
+                margin-bottom: 40px;
+            }
+        </style> -->
+    </head>
+    <body class="p-6 space-y-6 bg-sky-50">
+        <h1 class="font-bold text-3xl text-center">Chatbot Analytics Dashboard</h1>
+        
+        <!-- Stats Card-->
+         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <div class="bg-white p-6 shadow rounded-lg">
+                <p class="text-gray-500 text-sm">Total Questions</p>
+                <p id="totalQuestions" class="text-2xl font-bold text-gray-800">-</p>
+            </div>
+
+            <div class="bg-white p-6 shadow rounded-lg">
+                <p class="text-gray-500 text-sm">Avg Answer Length</p>
+                <p id="avgAnswerLength" class="text-2xl font-bold text-gray-800">-</p>
+            </div>
+
+            <div class="bg-white p-6 shadow rounded-lg">
+                <p class="text-gray-500 text-sm">Most Searched Topic</p>
+                <p id="topChunk" class="text-2xl font-bold text-gray-800">-</p>
+            </div>
+
+            <div class="bg-white p-6 shadow rounded-lg">
+                <p class="text-gray-500 text-sm">Top Question</p>
+                <p id="topQuestion" class="text-2xl font-bold text-gray-800">-</p>
+            </div>
+            
+            
+         </div>
+        
+        <!-- Chart Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Daily Questions Bar Chart -->
+            <div class="bg-white p-6 shadow rounded-lg">
+                <h2 class="text-lg font-semibold mb-3">Daily Questions</h2>
+                <canvas id="dailyChart"></canvas>
+            </div>
+
+            <!-- Daily Questions Line Chart -->
+            <div class="bg-white p-6 shadow rounded-lg">
+                <h2 class="text-lg font-semibold mb-3">Daily Questions</h2>
+                <canvas id="dailyChartLine"></canvas>
+            </div>
+            <!-- Most Used Source Chunks-->
+            <div class="bg-white p-6 shadow rounded-lg">
+                <h2 class="text-lg font-semibold mb-3">Most Used Source Topics</h2>
+                <canvas id="chunkChart"></canvas>
+            </div>
+            <!-- Top Questions -->
+            <div class="bg-white p-6 shadow rounded-lg">
+                <h2 class="text-lg font-semibold mb-3">Top Questions</h2>
+                <canvas id="questionChart"></canvas>
+            </div>
+        </div>
+         <script src="chat-widget.js"></script>
+        
+    </body>
+</html>

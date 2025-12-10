@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chatbot</title>
+    <style>
+        body { font-family: Arial; background: #f2f2f2; padding: 0; margin: 0; }
+        #chatbox { width: 100%; max-width: 600px; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; }
+        #messages { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; }
+        .msg { margin: 10px 0; }
+        .user { text-align: right; color: blue; }
+        .bot { text-align: left; color: green; }
+        #inputArea { margin-top: 10px; display: flex; }
+        input { flex: 1; padding: 10px; }
+        button { padding: 10px 20px; }
+    </style>
+</head>
+<body>
+
+<div id="chatbox">
+    <h2>LearnEngg AI Chatbot</h2>
+
+    <div id="messages"></div>
+
+    <div id="inputArea">
+        <input id="userInput" type="text" placeholder="Ask your question..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+async function sendMessage() {
+    let text = document.getElementById("userInput").value;
+    if (!text) return;
+
+    showMessage(text, "user");
+    document.getElementById("userInput").value = "";
+
+    let response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ question: text })
+    });
+
+    let data = await response.json();
+
+    showMessage(data.answer, "bot");
+}
+
+function showMessage(message, type) {
+    let messages = document.getElementById("messages");
+    let div = document.createElement("div");
+    div.className = "msg " + type;
+    div.textContent = message;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+</script>
+
+</body>
+</html>
