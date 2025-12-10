@@ -27,7 +27,8 @@ app.mount("/static",StaticFiles(directory="static"), name ="static")
 
 # Load Embedding model
 # model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
-model = SentenceTransformer("BAAI/bge-large-en-v1.5")
+model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
 
 # Load faiss index
 index = faiss.read_index("faiss.index")
@@ -196,4 +197,5 @@ def top_questions():
 
 
 if __name__ == "__main__":
+
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
