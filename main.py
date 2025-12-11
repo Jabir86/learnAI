@@ -1,18 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-import faiss
+from fastembed import TextEmbedding
 import numpy as np
+import faiss
 import json
-import statistics
-import datetime
 import uuid
-from fastapi.staticfiles import StaticFiles
+import datetime
+import statistics
 import uvicorn
+import os
 
 app = FastAPI()
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,25 +24,20 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# ================
-# LAZY LOAD MODEL
-# ================
-model = None
+# ============================
+# Load FastEmbed model (NO TORCH)
+# ============================
+print("🔥 Loading FastEmbed MiniLM-L6 model...")
+embedder = TextEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+print("✅ FastEmbed loaded!")
 
-def get_model():
-    global model
-    if model is None:
-        print("⚡ Loading embedding model (MiniLM-L3-v2)...")
-        model = SentenceTransformer("paraphrase-MiniLM-L3-v2", device="cpu")
-    return model
-
-# Load FAISS + metadata
+# Load FAISS index + metadata
 index = faiss.read_index("faiss.index")
 metadata = json.load(open("metadata.json", "r"))
 
-# Log file
 LOG_FILE = "chat_logs.jsonl"
 
 
@@ -47,70 +45,69 @@ class ChatRequest(BaseModel):
     question: str
 
 
-def log_interaction(question, answer, ref):
+def log_interaction(question, answer, refs):
     entry = {
         "id": str(uuid.uuid4()),
         "timestamp": datetime.datetime.utcnow().isoformat(),
         "question": question,
         "answer": answer,
-        "chunks_used": [r["id"] for r in ref],
-        "titles": [r["title"] for r in ref],
-        "reference": ref
+        "titles": [r["title"] for r in refs],
+        "reference": refs
     }
     with open(LOG_FILE, "a") as f:
         f.write(json.dumps(entry) + "\n")
 
 
+# ============================
+# Chat API
+# ============================
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
-    question = req.question
+    q = req.question
 
-    # Lazy load the model here
-    embedder = get_model()
+    # Embed using FastEmbed
+    q_vec = list(embedder.embed([q]))[0].astype("float32").reshape(1, -1)
 
-    # Embed question
-    q_vec = embedder.encode([question]).astype("float32")
+    # Search FAISS
+    distances, ids = index.search(q_vec, k=3)
+    refs = [metadata[i] for i in ids[0]]
 
-    # FAISS search
-    distances, ids = index.search(np.array(q_vec), k=3)
+    answer = refs[0]["text"]
 
-    matched_refs = [metadata[i] for i in ids[0]]
-
-    # Simple answer logic
-    answer = matched_refs[0]["text"] if matched_refs[0]["text"] else matched_refs[1]["text"]
-
-    # Log it
-    log_interaction(question, answer, matched_refs)
+    # Log
+    log_interaction(q, answer, refs)
 
     return {
-        "question": question,
         "answer": answer,
-        "reference": matched_refs
+        "reference": refs
     }
 
 
+# ============================
+# Dashboard route
+# ============================
 @app.get("/", response_class=HTMLResponse)
-def validation():
-    url = "/static/dashboard.html"
-    html_for_link = f"""
+def dashboard():
+    return """
     <html>
-    <head><title>Base Page</title></head>
-    <body>
-    <div>
-        <button onclick="window.location.href='{url}'">Dashboard</button>
-    </div>
+    <body style='font-family: Arial; padding: 40px;'>
+        <h2>LearnEngg AI Dashboard</h2>
+        <button onclick="window.location.href='/static/chat.html'"
+                style="padding:12px 20px; font-size:18px;">
+            Open Chat
+        </button>
     </body>
     </html>
     """
-    return html_for_link
 
 
-# Analytics API (unchanged)
+# ============================
+# Analytics routes
+# ============================
 @app.get("/api/analytics/daily_count")
 def daily_count():
     from collections import Counter
     counter = Counter()
-
     with open(LOG_FILE, "r") as f:
         for line in f:
             try:
@@ -118,7 +115,7 @@ def daily_count():
                 date = entry["timestamp"][:10]
                 counter[date] += 1
             except:
-                continue
+                pass
     return dict(counter)
 
 
@@ -126,7 +123,6 @@ def daily_count():
 def top_chunks():
     from collections import Counter
     counter = Counter()
-
     with open(LOG_FILE, "r") as f:
         for line in f:
             entry = json.loads(line)
@@ -142,26 +138,28 @@ def answer_length():
         for line in f:
             entry = json.loads(line)
             lengths.append(len(entry["answer"]))
-    return {"avg": statistics.mean(lengths), "min": min(lengths), "max": max(lengths)}
+    return {
+        "avg": statistics.mean(lengths),
+        "min": min(lengths),
+        "max": max(lengths)
+    }
 
 
 @app.get("/api/analytics/top_questions")
 def top_questions():
     from collections import Counter
     counter = Counter()
-
     with open(LOG_FILE, "r") as f:
         for line in f:
             entry = json.loads(line)
             q = entry["question"].strip().lower()
             counter[q] += 1
-
     return counter.most_common(20)
 
 
+# ============================
+# Run server (correct port)
+# ============================
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port)
-
-
