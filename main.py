@@ -10,7 +10,15 @@ import datetime
 import uuid
 from fastapi.staticfiles import StaticFiles
 import uvicorn
-from sentence_transformers import SentenceTransformer
+
+# 💡 FIX 1: Add the missing import
+try:
+    from sentence_transformers import SentenceTransformer
+except ImportError:
+    # This happens if 'sentence-transformers' and 'torch' are missing in requirements.txt
+    print("CRITICAL: 'sentence_transformers' not found. Please check requirements.txt.")
+    SentenceTransformer = None
+
 app = FastAPI()
 
 app.add_middleware(
@@ -23,21 +31,28 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# ================
-# LAZY LOAD MODEL
-# ================
+# ==================================================
+# 💡 FIX 2: Load Model at Startup to prevent timeouts 
+# ==================================================
 model = None
-
-def get_model():
-    global model
-    if model is None:
-        print("⚡ Loading embedding model (MiniLM-L3-v2)...")
+if SentenceTransformer:
+    try:
+        print("⚡ Loading embedding model (MiniLM-L3-v2) at startup...")
+        # Note: If this fails, it's almost always an Out-of-Memory (OOM) error.
         model = SentenceTransformer("paraphrase-MiniLM-L3-v2", device="cpu")
-    return model
+        print("✅ Model loaded successfully.")
+    except Exception as e:
+        print(f"❌ Failed to load SentenceTransformer model! This is often an OOM error on small servers. Error: {e}")
+        model = None
 
 # Load FAISS + metadata
-index = faiss.read_index("faiss.index")
-metadata = json.load(open("metadata.json", "r"))
+try:
+    index = faiss.read_index("faiss.index")
+    metadata = json.load(open("metadata.json", "r"))
+except Exception as e:
+    print(f"❌ Failed to load FAISS index or metadata! Error: {e}")
+    index = None
+    metadata = {}
 
 # Log file
 LOG_FILE = "chat_logs.jsonl"
@@ -65,19 +80,33 @@ def log_interaction(question, answer, ref):
 async def chat(req: ChatRequest):
     question = req.question
 
-    # Lazy load the model here
-    embedder = get_model()
+    # 💡 FIX 3: Check if the model failed to load during startup
+    if model is None or index is None:
+        return {
+            "question": question,
+            "answer": "Error: The AI model or FAISS index failed to load on the server. Check the deployment logs for an Out-of-Memory (OOM) error or missing files.",
+            "reference": []
+        }
 
     # Embed question
-    q_vec = embedder.encode([question]).astype("float32")
+    q_vec = model.encode([question]).astype("float32")
 
     # FAISS search
     distances, ids = index.search(np.array(q_vec), k=3)
 
-    matched_refs = [metadata[i] for i in ids[0]]
+    matched_refs = [metadata[str(i)] for i in ids[0]] # ensure keys are strings if metadata keys were strings
 
     # Simple answer logic
-    answer = matched_refs[0]["text"] if matched_refs[0]["text"] else matched_refs[1]["text"]
+    # Added a check to prevent IndexError if matched_refs is empty
+    answer = "No relevant documents found."
+    if matched_refs:
+        # Prioritize the first match
+        answer = matched_refs[0].get("text") or "No relevant text in the top match."
+        
+        # Fallback to the second match if the first one is empty
+        if not matched_refs[0].get("text") and len(matched_refs) > 1:
+             answer = matched_refs[1].get("text") or "No relevant text in the second match."
+
 
     # Log it
     log_interaction(question, answer, matched_refs)
@@ -97,6 +126,7 @@ def validation():
     <head><title>Base Page</title></head>
     <body>
     <div>
+        <p>Your service is running.</p>
         <button onclick="window.location.href='{url}'">Dashboard</button>
     </div>
     </body>
@@ -127,10 +157,12 @@ def top_chunks():
     from collections import Counter
     counter = Counter()
 
+    # NOTE: This will fail if LOG_FILE is missing
     with open(LOG_FILE, "r") as f:
         for line in f:
             entry = json.loads(line)
-            for cid in entry["titles"]:
+            # Assuming 'titles' in the log entry is a list of strings
+            for cid in entry.get("titles", []): 
                 counter[cid] += 1
     return counter.most_common(20)
 
@@ -142,6 +174,10 @@ def answer_length():
         for line in f:
             entry = json.loads(line)
             lengths.append(len(entry["answer"]))
+    
+    if not lengths:
+        return {"avg": 0, "min": 0, "max": 0}
+
     return {"avg": statistics.mean(lengths), "min": min(lengths), "max": max(lengths)}
 
 
@@ -163,7 +199,3 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port)
-
-
-
-
