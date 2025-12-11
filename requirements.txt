@@ -5,3 +5,7 @@ uvicorn
 numpy
 pydantic
 python-multipart
+# --- ADD THESE TWO LINES ---
+torch
+sentence-transformers
+# ---------------------------
