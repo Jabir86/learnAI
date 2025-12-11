@@ -1,9 +1,7 @@
 fastembed
 fastapi
 faiss-cpu
-sentence-transformers
 uvicorn
 numpy
 pydantic
 python-multipart
-
